@@ -29,18 +29,20 @@ rm(list=c("test","test_lbl","test_subj","train","train_lbl","train_subj"))
 
 ## 2. Extract only the measurements on the mean and the 
 ## standard deviation for each measurement
-cols <- grepl("*mean()*|*std()*|label|subject",features)
+cols <- grepl("*mean\\(\\)*|*std\\(\\)*|label|subject",features)
 merge <- merge[,cols]
 
 rm(list=c("cols","features"))
 
 ## 3. Use descriptive activity names to name the activities
 ## in the data set
-colnames(activity_lbl) <- c("number","activities")
+colnames(activity_lbl) <- c("number","activity")
 merge <- merge(merge,activity_lbl,by.x="label",by.y="number",all=FALSE)
-merge <- merge[,c(1:2,82,3:81)]
+ncols <- ncol(merge)
+n_1 <- ncols -1
+merge <- merge[,c(2,1,ncols,3:n_1)]
 merge <- tbl_df(merge)
-rm("activity_lbl")
+rm(list=c("activity_lbl","n_1","ncols"))
 ## 4. Appropriately label the data set with descriptive variable 
 ## names
 colnames(merge) <- gsub("*-mean\\(\\)\\-*"," Mean ",colnames(merge))
@@ -49,6 +51,5 @@ colnames(merge) <- gsub("*-std\\(\\)\\-*", " SD ", colnames(merge))
 ## 5. Create second, independent tidy data set with the average 
 ## of each variable for each activity and each subject.
 
-tidy <- merge %>% group_by(subject,activities) %>% summarise_each(funs(mean),-c(1:3))
-
-
+tidy <- merge %>% group_by(subject,activity) %>% summarise_each(funs(mean),-c(1:3))
+tidy <- tbl_df(tidy)
