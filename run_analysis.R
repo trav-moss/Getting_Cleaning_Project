@@ -53,3 +53,5 @@ colnames(merge) <- gsub("*-std\\(\\)\\-*", " SD ", colnames(merge))
 
 tidy <- merge %>% group_by(subject,activity) %>% summarise_each(funs(mean),-c(1:3))
 tidy <- tbl_df(tidy)
+setwd("../")
+write.table(tidy,"tidy.txt",row.name=FALSE)
