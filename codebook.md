@@ -1,9 +1,4 @@
----
-title: "Codebook"
-output:
-  html_document:
-    keep_md: yes
----
+# Codebook
 Variables:
 
 1   subject : Subject number and subset from which subject belongs (i.e. test vs training set).  Derived from subject.txt files.  
